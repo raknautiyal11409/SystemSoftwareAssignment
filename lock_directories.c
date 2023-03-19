@@ -43,5 +43,4 @@ void lock_directories() {
         wait(&status); // wait for child process to finish
     }
 
-    return 0;
 }

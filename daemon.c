@@ -24,7 +24,9 @@
 #include <sys/stat.h>
 #include <time.h>
 #include "daemon_task.h"
-#include <signal.h>
+
+
+time_t lastMove_time_t;
 
 int main() {
    time_t now;
@@ -36,7 +38,6 @@ int main() {
    backup_time.tm_sec = 0;
 
    struct tm lastMove_time = {0}; // initialize a tm struct to all zeroes
-   time_t lastMove_time_t;        // declare a time_t variable
 
    // set the fields of the tm struct to the desired values
    lastMove_time.tm_year = 2023 - 1900; // year - 1900
@@ -57,11 +58,12 @@ int main() {
     if (pid > 0) {
         // if PID > 0 :: this is the parent
         // this process performs printf and finishes
-        //sleep(10);  // uncomment to wait 10 seconds before process ends
+        printf("\nParent Process\n");
+        sleep(10);  // uncomment to wait 10 seconds before process ends
         exit(EXIT_SUCCESS);
     } else if (pid == 0) {
        // Step 1: Create the orphan process
-       printf("Child Process!!!!");
+       printf("Child Process!!!!\n");
        
        // Step 2: Elevate the orphan process to session leader, to loose controlling TTY
        // This command runs the process in a new session
@@ -69,8 +71,11 @@ int main() {
 
        // We could fork here again , just to guarantee that the process is not a session leader
        int pid = fork();
+
        if (pid > 0) {
-          exit(EXIT_SUCCESS);
+
+         exit(EXIT_SUCCESS);
+
        } else {
        
           // Step 3: call umask() to set the file mode creation mask to 0
@@ -91,23 +96,19 @@ int main() {
 
           // Signal Handler goes here
           // register the signal handler
-         signal(SIGTERM, sig_handler);
-
          if (signal(SIGTERM, sig_handler) == SIG_ERR) 
          {
             printf("\nSomething went wrong calling the SIG_Handler!!\n");
          }
 
-          // Log file goes here
-          // TODO create your logging functionality here to a file
-          // open connetion to logging system
-         // openlog("myprogram", LOG_PID|LOG_CONS, LOG_USER);
+         // Log file goes here
+         // TODO create your logging functionality here to a file
 
 
-          // Orphan Logic goes here!! 
-          // Keep process running with infinite loop
-          // When the parent finishes after 10 seconds, 
-          // the getppid() will return 1 as the parent (init process)
+         // Orphan Logic goes here!! 
+         // Keep process running with infinite loop
+         // When the parent finishes after 10 seconds, 
+         // the getppid() will return 1 as the parent (init process)
           
          struct tm check_uploads_time;
          time(&now);  /* get current time; same as: now = time(NULL)  */
@@ -118,6 +119,7 @@ int main() {
 	
          while(1) {
             sleep(1);
+            printf("child 1: my parent is: %i\n", getppid());
 
             if(signal(SIGINT, sig_handler) == SIG_ERR) {
                syslog(LOG_ERR, "ERROR: daemon.c : SIG_ERR RECEIVED");

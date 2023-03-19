@@ -15,8 +15,8 @@ void backup_dashboard(time_t lastMove_time_t) {
     DIR* dir;
     struct dirent* ent;
     int count = 0;
-    char* dash_dir = "/Dashboard_Directory/";
-    char* backUp_dir = "/BackUp_Directory/";
+    char* dash_dir = "Dashboard_Directory/";
+    char* backUp_dir = "BackUp_Directory/";
 
     // struct tm lastMove_time = {0}; // initialize a tm struct to all zeroes
     // time_t lastMove_time_t; // declare a time_t variable
@@ -24,9 +24,9 @@ void backup_dashboard(time_t lastMove_time_t) {
     // // set the fields of the tm struct to the desired values
     // lastMove_time.tm_year = 2023 - 1900; // year - 1900
     // lastMove_time.tm_mon = 2; // month (0-11, so March is 2)
-    // lastMove_time.tm_mday = 18; // day of the month
-    // lastMove_time.tm_hour = 12; // hour (24-hour clock)
-    // lastMove_time.tm_min = 30; // minute
+    // lastMove_time.tm_mday = 19; // day of the month
+    // lastMove_time.tm_hour = 21; // hour (24-hour clock)
+    // lastMove_time.tm_min = 33; // minute
     // lastMove_time.tm_sec = 0; // second
 
     // // convert the tm struct to a time_t value
@@ -36,7 +36,9 @@ void backup_dashboard(time_t lastMove_time_t) {
     dir = opendir(dash_dir);
     if (dir == NULL) {
         printf("Error opening directory: Shared Directory\n");
-        return -1;
+        syslog(LOG_ERR, "BackUP Dash: Error opening %s\n", dash_dir);
+        perror("BackUP Dash");
+        exit(EXIT_FAILURE);
     }
     
     int status;
@@ -59,12 +61,12 @@ void backup_dashboard(time_t lastMove_time_t) {
 
         
         // compare if the files has been modified since the last move
-        if(difftime(filestat.st_mtime, lastMove_time_t ) < 0) {
+        if(difftime(filestat.st_mtime, lastMove_time_t ) > 0) {
             pid_t pid = fork();
 
             if (pid == -1) {
                 printf("Error forking child process: %s\n", strerror(errno));
-                syslog(LOG_ERR, "BackUP Dash: %s ",EXIT_FAILURE);
+                syslog(LOG_ERR, "BackUP Dash: Error forking child process: %s\n", strerror(errno));
                 exit(EXIT_FAILURE);
 
             } else if (pid == 0) {

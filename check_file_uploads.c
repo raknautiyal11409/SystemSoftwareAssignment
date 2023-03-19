@@ -26,7 +26,7 @@ void check_file_uploads(time_t lastMove_time_t) {
         // struct tm lastCheck = {0}; // initialize a tm struct to all zeroes
         // time_t lastMove_time_t; // declare a time_t variable
 
-        // set the fields of the tm struct to the desired values
+        // // set the fields of the tm struct to the desired values
         // lastCheck.tm_year = 2023 - 1900; // year - 1900
         // lastCheck.tm_mon = 2; // month (0-11, so March is 2)
         // lastCheck.tm_mday = 18; // day of the month
@@ -34,8 +34,8 @@ void check_file_uploads(time_t lastMove_time_t) {
         // lastCheck.tm_min = 8; // minute
         // lastCheck.tm_sec = 0; // second
         
-        // convert the tm struct to a time_t value
-        // lastMove_time_t = mktime(&lastMove_time);
+        // // convert the tm struct to a time_t value
+        // lastMove_time_t = mktime(&lastCheck);
 
 
         char* shared_dir = "../SharedDirectory/";
@@ -53,7 +53,7 @@ void check_file_uploads(time_t lastMove_time_t) {
 
         if (directory == NULL) {
             perror("Error opening directory");
-            syslog(LOG_ERR, EXIT_FAILURE);
+            syslog(LOG_ERR, "Check File Uploads: Error opening directory %s", shared_dir);
             exit(EXIT_FAILURE);
         }
 
@@ -83,7 +83,7 @@ void check_file_uploads(time_t lastMove_time_t) {
                             if (stat(path, &filestat) == -1) {
                                 // Error: could not stat file
                                 perror("Error File Stat");
-                                syslog(LOG_ERR, EXIT_FAILURE);
+                                syslog(LOG_ERR, "Check File Uploads: ERROR loading file STATS for %s", path);
                                 exit(EXIT_FAILURE);
                             }
 
@@ -114,6 +114,7 @@ void check_file_uploads(time_t lastMove_time_t) {
             }
         }
 
+        // check if a department has not uploaded file.
         for (int i = 0; i < rows; i++)
         {
             (fileCheck[i] == 0) ? syslog(LOG_INFO, "File NOT Uploaded By %s", file_names[i]) : syslog(LOG_INFO, "File NOT Uploaded By %s", file_names[i]);
@@ -125,8 +126,6 @@ void check_file_uploads(time_t lastMove_time_t) {
     } else { // Parent process
         
     }
-
-    return 0;
 }
 
       

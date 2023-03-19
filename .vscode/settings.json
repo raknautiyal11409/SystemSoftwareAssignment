@@ -5,6 +5,14 @@
         "types.h": "c",
         "cerrno": "c",
         "sstream": "c",
-        "stat.h": "c"
-    }
+        "stat.h": "c",
+        "stdio.h": "c",
+        "*.tcc": "c",
+        "array": "c",
+        "syslog.h": "c",
+        "time.h": "c",
+        "signal.h": "c",
+        "daemon_task.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "enabled"
 }

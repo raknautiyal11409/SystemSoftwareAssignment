@@ -12,7 +12,7 @@
 #include <pwd.h>
 
 
-void collect_reports(time_t lastMove_time_t;){
+void collect_reports(time_t lastMove_time_t){
 // void main() {
     DIR *dir;
     struct dirent *ent;
@@ -23,15 +23,15 @@ void collect_reports(time_t lastMove_time_t;){
     // struct tm lastMove_time = {0}; // initialize a tm struct to all zeroes
     // time_t lastMove_time_t;        // declare a time_t variable
 
-    // set the fields of the tm struct to the desired values
+    // // set the fields of the tm struct to the desired values
     // lastMove_time.tm_year = 2023 - 1900; // year - 1900
-    // lastMove_time.tm_mon = 2;            // month (0-11, so March is 2)
-    // lastMove_time.tm_mday = 19;          // day of the month
-    // lastMove_time.tm_hour = 4;           // hour (24-hour clock)
-    // lastMove_time.tm_min = 4;            // minute
+    // lastMove_time.tm_mon = 2;            // month (0-11)
+    // lastMove_time.tm_mday = 10;          // day of the month
+    // lastMove_time.tm_hour = 21;           // hour (24-hour clock)
+    // lastMove_time.tm_min = 20;            // minute
     // lastMove_time.tm_sec = 0;            // second
 
-    // convert the tm struct to a time_t value
+    // // convert the tm struct to a time_t value
     // lastMove_time_t = mktime(&lastMove_time);
 
     FILE *logFile;
@@ -106,7 +106,7 @@ void collect_reports(time_t lastMove_time_t;){
     }
 
     // Print to log file
-    if (fprintf(logFile, "ATTEMPT to copy files on %s\n", time_string) < 0) {
+    if (fprintf(logFile, "\n -- ATTEMPT to copy files on %s --\n", time_string) < 0) {
         perror("fprintf");
         exit(EXIT_FAILURE);
     }
@@ -124,6 +124,8 @@ void collect_reports(time_t lastMove_time_t;){
         strcpy(path, shared_dir);
         strcat(path, ent->d_name);
         int alreadyCopied = 0;
+
+        printf("\n %d",difftime(filestat.st_mtime, lastMove_time_t));
 
         if (stat(path, &filestat) == -1)
         {
