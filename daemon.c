@@ -27,13 +27,27 @@
 #include <signal.h>
 
 int main() {
-    time_t now;
-    struct tm backup_time;
-    time(&now);  /* get current time; same as: now = time(NULL)  */
-    backup_time = *localtime(&now);
-    backup_time.tm_hour = 1; 
-    backup_time.tm_min = 0; 
-    backup_time.tm_sec = 0;
+   time_t now;
+   struct tm backup_time;
+   time(&now);  /* get current time; same as: now = time(NULL)  */
+   backup_time = *localtime(&now);
+   backup_time.tm_hour = 1; 
+   backup_time.tm_min = 0; 
+   backup_time.tm_sec = 0;
+
+   struct tm lastMove_time = {0}; // initialize a tm struct to all zeroes
+   time_t lastMove_time_t;        // declare a time_t variable
+
+   // set the fields of the tm struct to the desired values
+   lastMove_time.tm_year = 2023 - 1900; // year - 1900
+   lastMove_time.tm_mon = 0;            // month (0-11, so March is 2)
+   lastMove_time.tm_mday = 1;          // day of the month
+   lastMove_time.tm_hour = 12;           // hour (24-hour clock)
+   lastMove_time.tm_min = 0;            // minute
+   lastMove_time.tm_sec = 0;            // second
+
+   // convert the tm struct to a time_t value
+   lastMove_time_t = mktime(&lastMove_time);
 
     // Implementation for Singleton Pattern if desired (Only one instance running)
 
@@ -82,8 +96,6 @@ int main() {
          if (signal(SIGTERM, sig_handler) == SIG_ERR) 
          {
             printf("\nSomething went wrong calling the SIG_Handler!!\n");
-         } else {
-            printf ("Child process is returned with: %d.\n",0);
          }
 
           // Log file goes here
@@ -117,7 +129,7 @@ int main() {
             double seconds_to_files_check = difftime(now,mktime(&check_uploads_time));
             //syslog(LOG_INFO, "%.f seconds until check for xml uploads", seconds_to_files_check);
             if(seconds_to_files_check == 0) {
-               check_file_uploads();
+               check_file_uploads(lastMove_time_t);
 
                //change to tommorow's day
                update_timer(&check_uploads_time);
@@ -130,11 +142,12 @@ int main() {
             //syslog(LOG_INFO, "%.f seconds until backup", seconds_to_files_check);
             if(seconds_to_transfer == 0) {
                lock_directories();
-               collect_reports();	  
-               backup_dashboard();
+               collect_reports(lastMove_time_t);	  
+               backup_dashboard(lastMove_time_t);
                sleep(30);
                unlock_directories();
                generate_reports();
+               lastMove_time_t == time(NULL);
                //after actions are finished, start counting to next day
                update_timer(&backup_time);
             }	

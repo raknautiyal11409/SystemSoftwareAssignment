@@ -15,8 +15,8 @@ void backup_dashboard(time_t lastMove_time_t) {
     DIR* dir;
     struct dirent* ent;
     int count = 0;
-    char* dash_dir = "../Dashboard_Directory/";
-    char* backUp_dir = "../BackUp_Directory";
+    char* dash_dir = "/Dashboard_Directory/";
+    char* backUp_dir = "/BackUp_Directory/";
 
     // struct tm lastMove_time = {0}; // initialize a tm struct to all zeroes
     // time_t lastMove_time_t; // declare a time_t variable
@@ -59,7 +59,7 @@ void backup_dashboard(time_t lastMove_time_t) {
 
         
         // compare if the files has been modified since the last move
-        if(difftime(filestat.st_mtime, lastMove_time_t ) > 0) {
+        if(difftime(filestat.st_mtime, lastMove_time_t ) < 0) {
             pid_t pid = fork();
 
             if (pid == -1) {
@@ -70,14 +70,11 @@ void backup_dashboard(time_t lastMove_time_t) {
             } else if (pid == 0) {
 
                 // Child process copies the file
-                char source[50];
                 char dest[50];
-                strcat(source, dash_dir);
-                strcat(source, ent->d_name);
-                strcat(dest, backUp_dir);
+                strcpy(dest, backUp_dir);
                 strcat(dest, ent->d_name);
                 
-                if (execlp("cp", "cp", source, dest, NULL) == -1) {
+                if (execlp("cp", "cp", path, dest, NULL) == -1) {
                     printf("Error copying file: %s\n", strerror(errno));
                     syslog(LOG_ERR, "Error copying file: %s\n", strerror(errno));
                     exit(EXIT_FAILURE);

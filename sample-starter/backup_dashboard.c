@@ -18,20 +18,16 @@ void backup_dashboard(void) {
     char* dash_dir = "../Dashboard_Directory/";
     char* backUp_dir = "../BackUp_Directory";
 
-    // collet time info 
-    // time_t current_time = time(NULL); // get the current time
-    // time_t future_time = current_time + 30; // add 30 seconds to the current time
+    // struct tm lastMove_time = {0}; // initialize a tm struct to all zeroes
+    // time_t lastMove_time_t; // declare a time_t variable
 
-    struct tm lastMove_time = {0}; // initialize a tm struct to all zeroes
-    time_t lastMove_time_t; // declare a time_t variable
-
-    // set the fields of the tm struct to the desired values
-    lastMove_time.tm_year = 2023 - 1900; // year - 1900
-    lastMove_time.tm_mon = 2; // month (0-11, so March is 2)
-    lastMove_time.tm_mday = 18; // day of the month
-    lastMove_time.tm_hour = 12; // hour (24-hour clock)
-    lastMove_time.tm_min = 30; // minute
-    lastMove_time.tm_sec = 0; // second
+    // // set the fields of the tm struct to the desired values
+    // lastMove_time.tm_year = 2023 - 1900; // year - 1900
+    // lastMove_time.tm_mon = 2; // month (0-11, so March is 2)
+    // lastMove_time.tm_mday = 18; // day of the month
+    // lastMove_time.tm_hour = 12; // hour (24-hour clock)
+    // lastMove_time.tm_min = 30; // minute
+    // lastMove_time.tm_sec = 0; // second
 
     // convert the tm struct to a time_t value
     lastMove_time_t = mktime(&lastMove_time);

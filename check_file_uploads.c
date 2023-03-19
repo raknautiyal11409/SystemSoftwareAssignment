@@ -47,7 +47,7 @@ void check_file_uploads(time_t lastMove_time_t) {
         int fileCheck[4] = {0,0,0,0};
         int modified_files = 0;
         int rows = sizeof(file_names) / sizeof(file_names[0]);
-    
+        
         // Open directory
         directory = opendir(shared_dir);
 

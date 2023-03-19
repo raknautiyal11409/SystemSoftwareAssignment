@@ -9,10 +9,11 @@ void sig_handler(int sigNum)
 	if (sigNum == SIGINT) {
 		syslog(LOG_INFO, "RECEIVED SIGNAL INTERRUPT, INITIATING BACKUP AND TRANSFER");
 		lock_directories();
-		collect_reports();
-		backup_dashboard();
+		collect_reports(lastMove_time_t);
+		backup_dashboard(lastMove_time_t);
 		sleep(30);
 		unlock_directories();	
+		lastMove_time_t == time(NULL);
 	}
 
 }
