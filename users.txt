@@ -1,0 +1,22 @@
+-- This file contains all the commands for creating users for each department and assing each user to the same user group
+-- Codespace account is the comapny account for managing all the operations
+-- The user group is then added to the folder 
+
+
+// Create a user group
+sudo groupadd companyDepartments
+
+// Create users  for each department and assign them to the company group 
+sudo useradd -d /home/distributionDEP -G companyDepartments distributionDEP
+sudo useradd -d /home/manufacturingDEP -G companyDepartments manufacturingDEP
+sudo useradd -d /home/salesDEP -G companyDepartments salesDEP
+sudo useradd -d /home/warehouseDEP -G companyDepartments warehouseDEP
+
+// set password for each account (password = password)
+sudo passwd distributionDEP
+sudo passwd manufacturingDEP
+sudo passwd salesDEP
+sudo passwd warehouseDEP
+
+// change user 
+su <userName>

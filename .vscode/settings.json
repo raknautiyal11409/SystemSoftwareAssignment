@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "cstdlib": "c",
+        "unistd.h": "c",
+        "types.h": "c",
+        "cerrno": "c",
+        "sstream": "c",
+        "stat.h": "c"
+    }
+}
